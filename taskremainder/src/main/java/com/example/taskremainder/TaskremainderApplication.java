@@ -11,5 +11,4 @@ public class TaskremainderApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TaskremainderApplication.class, args);
 	}
-
 }

@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/script.js}"></script>
 </head>
+
 <body>
-$END$
+
+<div class="navbar">
+    <div class="nav-left"><h2>Task Reminder</h2></div>
+    <div class="nav-right">
+        <a href="/register">Register</a>
+    </div>
+</div>
+<div id="alertBox" class="alert"></div>
+
+<div class="card">
+    <h2>Register</h2>
+
+    <form action="/register" method="post">
+        <input name="username" placeholder="Username" required> <!-- FIX -->
+        <input name="email" type="email" placeholder="email" required>
+        <input name="password" type="password" placeholder="password" required>
+
+        <button class="btn">Register</button>
+    </form>
+
+    <p>Already have an account?</p>
+    <a href="/login">Login</a>
+</div>
+
 </body>
 </html>

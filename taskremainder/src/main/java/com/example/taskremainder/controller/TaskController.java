@@ -1,60 +1,132 @@
 package com.example.taskremainder.controller;
 
-import com.example.taskremainder.model.Taskmodel;
-import com.example.taskremainder.service.TaskManager;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import com.example.taskremainder.service.EmailService;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
-@RestController
+import com.example.taskremainder.entity.Task;
+import com.example.taskremainder.entity.User;
+import com.example.taskremainder.service.TaskService;
+import com.example.taskremainder.service.EmailService;
+
+@Controller
 @RequestMapping("/tasks")
 public class TaskController {
 
-    private final TaskManager service;
+    private final TaskService service;
     private final EmailService emailService;
 
-    public TaskController(TaskManager service, EmailService emailService) {
+    public TaskController(TaskService service, EmailService emailService) {
         this.service = service;
         this.emailService = emailService;
     }
 
-    // GET ALL TASKS
-    @GetMapping("/all")
-    public List<Taskmodel> getAllTasks() {
-        return service.getAllTasks();
+    // ================= DASHBOARD =================
+    @GetMapping("/dashboard")
+    public String dashboard(Model model, HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) return "redirect:/login";
+
+        List<Task> tasks = service.getTasks(user);
+
+        if (tasks == null) tasks = new ArrayList<>();
+
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("total", service.totalTasks(user));
+        model.addAttribute("pending", service.pendingTasks(user));
+        model.addAttribute("completed", service.completedTasks(user));
+        model.addAttribute("overdue", service.overdueTasks(user));
+
+        return "dashboard";
     }
 
-    // ADD TASK
+    // ================= ADD TASK =================
     @PostMapping("/add")
-    public String addTask(@RequestBody Taskmodel task) {
-        service.addTask(task);
-        return "Task added successfully";
+    public String addTask(Task task,
+                          HttpSession session,
+                          RedirectAttributes redirect) {
+
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) return "redirect:/login";
+
+        task.setUser(user);
+
+        service.saveTask(task);
+
+        redirect.addFlashAttribute("success", "Task Added Successfully!");
+
+        return "redirect:/tasks/dashboard";
     }
 
-    // UPDATE TASK
-    @PutMapping("/update/{id}")
-    public String updateTask(@PathVariable Long id,
-                             @RequestBody Taskmodel task) {
+    // ================= EDIT PAGE =================
+    @GetMapping("/edit/{id}")
+    public String editPage(@PathVariable Long id, Model model) {
 
-        service.updateTask(id, task);
-        return "Task updated successfully";
+        Task task = service.findById(id);
+        model.addAttribute("task", task);
+
+        return "edit-task";
     }
 
-    // DELETE TASK
-    @DeleteMapping("/delete/{id}")
-    public String deleteTask(@PathVariable Long id) {
+    // ================= UPDATE TASK =================
+    @PostMapping("/update")
+    public String updateTask(Task task,
+                             HttpSession session,
+                             RedirectAttributes redirect) {
+
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) return "redirect:/login";
+
+        task.setUser(user);
+
+        service.saveTask(task);
+
+        redirect.addFlashAttribute("success", "Task Updated Successfully!");
+
+        return "redirect:/tasks/dashboard";
+    }
+
+    // ================= DELETE =================
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id,
+                         RedirectAttributes redirect) {
 
         service.deleteTask(id);
-        return "Task deleted successfully";
+
+        redirect.addFlashAttribute("success", "Task Deleted Successfully!");
+
+        return "redirect:/tasks/dashboard";
     }
-    @GetMapping("/send-mail")
-    public String sendMail() {
-        emailService.sendEmail(
-                "tunikiakshitha55@gmail.com",
-                "Test Mail",
-                "Hello! Email is working 🎉"
-        );
-        return "Email Sent!";
+
+    // ================= FILTER =================
+    @GetMapping("/filter")
+    public String filter(@RequestParam String status,
+                         Model model,
+                         HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) return "redirect:/login";
+
+        List<Task> tasks = service.getTasksByStatus(user, status);
+
+        if (tasks == null) tasks = new ArrayList<>();
+
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("total", service.totalTasks(user));
+        model.addAttribute("pending", service.pendingTasks(user));
+        model.addAttribute("completed", service.completedTasks(user));
+        model.addAttribute("overdue", service.overdueTasks(user));
+
+        return "dashboard";
     }
 }

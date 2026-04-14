@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Edit Task</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
-$END$
+
+<div class="card">
+    <h2>Edit Task</h2>
+
+    <form th:action="@{/tasks/update}" method="post">
+
+        <input type="hidden" name="id" th:value="${task.id}">
+
+        <input type="text" name="title" th:value="${task.title}" required>
+
+        <input type="text" name="description" th:value="${task.description}" required>
+
+        <input type="datetime-local" name="dueDate" required>
+
+        <select name="status">
+            <option value="PENDING">Pending</option>
+            <option value="COMPLETED">Completed</option>
+        </select>
+
+        <button class="btn">Update Task</button>
+
+    </form>
+
+</div>
+
 </body>
 </html>

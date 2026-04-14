@@ -1,66 +1,87 @@
-package com.example.taskremainder.model;
+package com.example.taskremainder.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import jakarta.persistence.Table;
+
 @Entity
-public class Taskmodel {
-        @Id
-        private Long id;
-        private String title;
-        private String description;
-        private LocalDateTime dueDate;
-        private String status;
+@Table(name = "tasks")
+public class Task {
 
-        public Taskmodel() {}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)   // ✅ AUTO ID
+    private Long id;
 
-        public Taskmodel(Long id, String title, String description,LocalDateTime dueDate,String status) {
-            this.id= id;
-            this.title = title;
-            this.description = description;
-            this.dueDate=dueDate;
-            this.status = status;
-        }
+    private String title;
+    private String description;
+    private LocalDateTime dueDate;
+    private String status;
 
-        public Long getId() {
-            return id;
-        }
+    // ================= RELATION =================
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-        public void setId(Long id) {
-            this.id = id;
-        }
+    // ================= CONSTRUCTORS =================
+    public Task() {}
 
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status= status;
-        }
-
-        public LocalDateTime getDueDate() {
-            return dueDate;
-        }
-
-        public void setDueDate(LocalDateTime dueDate) {
-            this.dueDate = dueDate;
-        }
+    public Task(Long id, String title, String description,
+                LocalDateTime dueDate, String status) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.status = status;
     }
 
+    // ================= GETTERS & SETTERS =================
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {   // optional now
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {   // ✅ NEW
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDateTime dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    // ================= USER RELATION =================
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {   // ✅ THIS FIXES YOUR ERROR
+        this.user = user;
+    }
+}

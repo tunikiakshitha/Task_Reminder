@@ -1,69 +1,16 @@
-package com.example.taskremainder.Repository;
-import com.example.taskremainder.model.Taskmodel;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+package com.example.taskremainder.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
-@Repository
-public class TaskRepository {
+import com.example.taskremainder.entity.Task;
+import com.example.taskremainder.entity.User;
 
-    private final JdbcTemplate jdbcTemplate;
+public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    public TaskRepository(JdbcTemplate jdbcTemplate){
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    List<Task> findByUser(User user);
 
-    // ADD TASK
-    public void addTask(Taskmodel task){
+    int countByUser(User user);
 
-        String sql = "INSERT INTO tasks (id,title,description,due_date,status) VALUES (?,?,?,?,?)";
-
-        jdbcTemplate.update(sql,
-                task.getId(),
-                task.getTitle(),
-                task.getDescription(),
-                task.getDueDate(),
-                task.getStatus());
-    }
-
-    // GET ALL TASKS
-    public List<Taskmodel> getTasks(){
-
-        String sql = "SELECT * FROM tasks";
-
-        return jdbcTemplate.query(sql,(rs,rowNum)->{
-
-            Taskmodel task = new Taskmodel();
-
-            task.setId(rs.getLong("id"));
-            task.setTitle(rs.getString("title"));
-            task.setDescription(rs.getString("description"));
-            task.setDueDate(rs.getTimestamp("due_date").toLocalDateTime());
-            task.setStatus(rs.getString("status"));
-
-            return task;
-        });
-    }
-
-    // DELETE TASK
-    public void deleteTask(Long id){
-
-        String sql = "DELETE FROM tasks WHERE id = ?";
-
-        jdbcTemplate.update(sql,id);
-    }
-
-    // UPDATE TASK
-    public void updateTask(Long id, Taskmodel task){
-
-        String sql = "UPDATE tasks SET title=?, description=?, due_date=?, status=? WHERE id=?";
-
-        jdbcTemplate.update(sql,
-                task.getTitle(),
-                task.getDescription(),
-                task.getDueDate(),
-                task.getStatus(),
-                id);
-    }
+    int countByUserAndStatus(User user, String status);
 }

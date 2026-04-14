@@ -1,4 +1,9 @@
-package com.example.taskremainder.Repository;
+package com.example.taskremainder.repository;
 
-public class UserRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.taskremainder.entity.User;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    User findByEmail(String email); // ✅ correct
 }

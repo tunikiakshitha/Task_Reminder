@@ -1,3 +1,4 @@
+/* RESET */
 * {
     margin: 0;
     padding: 0;
@@ -5,39 +6,70 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
+/* BODY */
 body {
     background: linear-gradient(135deg, #6a11cb, #2575fc);
-    height: 100vh;
+    min-height: 100vh;
 }
 
-/* Center Card */
-.container {
+/* NAVBAR */
+.navbar {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    height: 100%;
+    background: white;
+    padding: 15px 40px;
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
 }
 
+/* NAVBAR LEFT */
+.nav-left h2 {
+    color: black;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* NAVBAR RIGHT */
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+/* LOGOUT BUTTON */
+.logout-btn {
+    padding: 8px 16px;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background: #cc0000;
+}
+
+/* CONTAINER */
+.container {
+    padding: 30px;
+}
+
+/* CARD (LOGIN / FORM) */
 .card {
     background: #f4f4f4;
     padding: 40px;
     width: 350px;
     border-radius: 15px;
     text-align: center;
+    margin: auto;
+    margin-top: 50px;
     animation: fadeIn 0.6s ease-in-out;
 }
 
-.card h1 {
-    margin-bottom: 10px;
-}
-
-.card p {
-    margin-bottom: 20px;
-    color: #555;
-}
-
-/* Inputs */
-input {
+/* INPUTS */
+input, select {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
@@ -45,7 +77,7 @@ input {
     border: 1px solid #ccc;
 }
 
-/* Buttons */
+/* BUTTON */
 .btn {
     width: 100%;
     padding: 12px;
@@ -63,65 +95,154 @@ input {
     transform: scale(1.05);
 }
 
-/* Links */
-.link {
-    margin-top: 15px;
-    display: block;
-}
-
-.link a {
-    color: #2575fc;
+/* ADD BUTTON */
+.add-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #2575fc;
+    color: white;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: bold;
+    margin-bottom: 15px;
+    transition: 0.3s;
 }
 
-/* Navbar */
-.navbar {
+.add-btn:hover {
+    background: #1a5edb;
+}
+
+/* ================= DASHBOARD STATS ================= */
+
+.stats {
     display: flex;
-    justify-content: space-between;
-    padding: 15px 30px;
-    background: white;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    gap: 20px;
 }
 
-.logout {
-    padding: 8px 15px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-}
-
-/* Dashboard */
-.dashboard {
+.stat-card {
+    flex: 1;
     padding: 20px;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.stat-card:hover {
+    transform: scale(1.05);
+}
+
+.stat-total {
+    background: linear-gradient(45deg, #36d1dc, #5b86e5);
+}
+
+.stat-pending {
+    background: linear-gradient(45deg, #ff416c, #ff4b2b);
+}
+
+.stat-completed {
+    background: linear-gradient(45deg, #00b09b, #96c93d);
+}
+
+/* ================= FILTER BUTTONS ================= */
+
+.filter-buttons {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.filter-buttons a {
+    text-decoration: none;
+    margin: 5px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background: white;
+    color: black;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.filter-buttons a:hover {
+    background: #2575fc;
+    color: white;
+}
+
+/* ================= TASK LIST ================= */
+
+.task-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
 }
 
 .task-card {
     background: #f4f4f4;
     padding: 20px;
-    margin-top: 20px;
     border-radius: 15px;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+}
+.task-card button {
+    margin: 5px 5px 0 0;
 }
 
+.task-card h3 {
+    margin-bottom: 10px;
+}
+
+.task-card p {
+    margin: 5px 0;
+}
+
+/* STATUS COLORS */
 .status {
-    background: #2575fc;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 10px;
-    float: right;
+    font-weight: bold;
 }
 
-/* SUCCESS ALERT */
+.status.pending {
+    color: red;
+}
+
+.status.completed {
+    color: green;
+}
+
+/* DELETE BUTTON */
+.delete-btn {
+    margin-top: 10px;
+    padding: 6px 12px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* ================= ALERT ================= */
+
 .alert {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: #28a745;
-    color: white;
     padding: 15px 20px;
     border-radius: 10px;
+    color: white;
+    font-weight: bold;
     opacity: 0;
     transform: translateY(-20px);
     transition: 0.4s ease;
+}
+
+.alert.success {
+    background: #28a745;
+}
+
+.alert.error {
+    background: #dc3545;
 }
 
 .alert.show {
@@ -129,8 +250,28 @@ input {
     transform: translateY(0);
 }
 
-/* Animation */
+/* ================= ANIMATION ================= */
+
 @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity: 1; transform: translateY(0);}
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+    .stats {
+        flex-direction: column;
+    }
+
+    .navbar {
+        flex-direction: column;
+        gap: 10px;
+    }
 }

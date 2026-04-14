@@ -1,10 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
-$END$
+
+<div class="navbar">
+    <h2>Task Reminder</h2>
+    <a href="/logout"><button class="logout-btn">Logout</button></a>
+</div>
+
+<div class="container">
+
+    <!-- SUCCESS MESSAGE -->
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat-card stat-total">
+            <h3>Total</h3>
+            <p th:text="${total}"></p>
+        </div>
+
+        <div class="stat-card stat-pending">
+            <h3>Pending</h3>
+            <p th:text="${pending}"></p>
+        </div>
+
+        <div class="stat-card stat-completed">
+            <h3>Completed</h3>
+            <p th:text="${completed}"></p>
+        </div>
+    </div>
+
+    <!-- ADD TASK -->
+    <div class="card">
+        <h3>Add Task</h3>
+
+        <form th:action="@{/tasks/add}" method="post">
+
+            <input type="text" name="title" placeholder="Task Title" required>
+
+            <input type="text" name="description" placeholder="Description" required>
+
+            <input type="datetime-local" name="dueDate" required>
+
+            <select name="status">
+                <option value="PENDING">Pending</option>
+                <option value="COMPLETED">Completed</option>
+            </select>
+
+            <button class="btn">Add Task</button>
+        </form>
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-buttons">
+        <a href="/tasks/dashboard">All</a>
+        <a href="/tasks/filter?status=PENDING">Pending</a>
+        <a href="/tasks/filter?status=COMPLETED">Completed</a>
+    </div>
+
+    <!-- TASK LIST -->
+    <div class="task-container">
+
+        <div th:each="task : ${tasks}" class="task-card">
+
+            <h3 th:text="${task.title}"></h3>
+
+            <p><b>Description:</b> <span th:text="${task.description}"></span></p>
+
+            <p><b>Date:</b> <span th:text="${task.dueDate}"></span></p>
+
+            <p>
+                <b>Status:</b>
+                <span th:text="${task.status}"></span>
+            </p>
+
+            <!-- EDIT -->
+            <a th:href="@{/tasks/edit/{id}(id=${task.id})}">
+                <button class="btn">Edit</button>
+            </a>
+
+            <!-- DELETE -->
+            <a th:href="@{/tasks/delete/{id}(id=${task.id})}">
+                <button class="delete-btn">Delete</button>
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- CSV -->
+    <div style="text-align:center; margin-top:20px;">
+        <a href="/export" class="add-btn">Download CSV</a>
+    </div>
+
+</div>
+
 </body>
 </html>

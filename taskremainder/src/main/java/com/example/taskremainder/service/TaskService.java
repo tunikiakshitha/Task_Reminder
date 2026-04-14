@@ -1,38 +1,76 @@
 package com.example.taskremainder.service;
 
-import com.example.taskremainder.entity.Task;
-import com.example.taskremainder.Repository.TaskRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.time.LocalDateTime; // ✅ FIX
+
+import com.example.taskremainder.entity.Task;
+import com.example.taskremainder.entity.User;
+import com.example.taskremainder.repository.TaskRepository;
 
 @Service
-public class TaskManager {
+public class TaskService {
 
-    private final TaskRepository repository;
+    @Autowired
+    private TaskRepository taskRepository;
 
-    // Constructor Injection
-    public TaskManager(TaskRepository repository){
-        this.repository = repository;
+    // ================= SAVE =================
+    public void saveTask(Task task) {
+        taskRepository.save(task);
     }
 
-    // ADD TASK
-    public void addTask(Task task){
-        repository.addTask(task);
+    // ================= GET USER TASKS =================
+    public List<Task> getTasks(User user) {
+        return taskRepository.findByUser(user);
     }
 
-    // GET ALL TASKS
-    public List<Task> getAllTasks(){
-        return repository.getTasks();
+    // ================= DELETE =================
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
     }
 
-    // DELETE TASK
-    public void deleteTask(Long id){
-        repository.deleteTask(id);
+    // ================= COUNT =================
+    public int totalTasks(User user) {
+        return taskRepository.countByUser(user);
     }
 
-    // UPDATE TASK
-    public void updateTask(Long id, Task task){
-        repository.updateTask(id, task);
+    public int pendingTasks(User user) {
+        return taskRepository.countByUserAndStatus(user, "PENDING");
+    }
+
+    public int completedTasks(User user) {
+        return taskRepository.countByUserAndStatus(user, "COMPLETED");
+    }
+
+    // ================= FILTER =================
+    public List<Task> getTasksByStatus(User user, String status) {
+        return taskRepository.findByUser(user)
+                .stream()
+                .filter(t -> t.getStatus().equalsIgnoreCase(status))
+                .toList();
+    }
+
+    // ================= GET ALL =================
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
+    }
+
+    // ================= FIND BY ID =================
+    public Task findById(Long id) {
+        return taskRepository.findById(id).orElse(null);
+    }
+
+    // ================= OVERDUE =================
+    public int overdueTasks(User user) {
+        return (int) taskRepository.findByUser(user)
+                .stream()
+                .filter(t ->
+                        t.getDueDate() != null &&  // ✅ safety
+                                t.getDueDate().isBefore(LocalDateTime.now()) &&
+                                t.getStatus().equalsIgnoreCase("PENDING")
+                )
+                .count();
     }
 }
