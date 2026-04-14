@@ -1,6 +1,6 @@
 package com.example.taskremainder.scedular;
 
-import com.example.taskremainder.model.Taskmodel;
+import com.example.taskremainder.entity.Task;
 import com.example.taskremainder.service.TaskManager;
 import com.example.taskremainder.service.EmailService;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,14 +20,14 @@ public class TaskScedular {
         this.emailService = emailService;
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 60000)
     public void checkTasks() {
 
         System.out.println("Scheduler running...");
 
-        List<Taskmodel> tasks = service.getAllTasks();
+        List<Task> tasks = service.getAllTasks();
 
-        for (Taskmodel task : tasks) {
+        for (Task task : tasks) {
 
             if (task.getStatus().equalsIgnoreCase("PENDING") &&
                     task.getDueDate().isBefore(LocalDateTime.now())) {

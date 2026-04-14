@@ -1,6 +1,6 @@
 package com.example.taskremainder.service;
 
-import com.example.taskremainder.model.Taskmodel;
+import com.example.taskremainder.entity.Task;
 import com.example.taskremainder.Repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +17,12 @@ public class TaskManager {
     }
 
     // ADD TASK
-    public void addTask(Taskmodel task){
+    public void addTask(Task task){
         repository.addTask(task);
     }
 
     // GET ALL TASKS
-    public List<Taskmodel> getAllTasks(){
+    public List<Task> getAllTasks(){
         return repository.getTasks();
     }
 
@@ -32,7 +32,7 @@ public class TaskManager {
     }
 
     // UPDATE TASK
-    public void updateTask(Long id, Taskmodel task){
+    public void updateTask(Long id, Task task){
         repository.updateTask(id, task);
     }
 }
